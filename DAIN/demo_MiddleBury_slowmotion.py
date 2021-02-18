@@ -30,7 +30,8 @@ model = networks.__dict__[args.netName](    channel=args.channels,
 if args.use_cuda:
     model = model.cuda()
 
-args.SAVED_MODEL = './model_weights/best.pth'
+args.SAVED_MODEL ='/content/DAIN/model_weights/'+ args.SAVED_MODEL + "/best" + ".pth"
+# args.SAVED_MODEL = './model_weights/best.pth'
 if os.path.exists(args.SAVED_MODEL):
     print("The testing model weight is: " + args.SAVED_MODEL)
     if not args.use_cuda:
@@ -74,9 +75,9 @@ if DO_MiddleBurryOther:
     for dir in subdir: 
         print(dir)
         os.mkdir(os.path.join(gen_dir, dir))
-        arguments_strFirst = os.path.join(MB_Other_DATA, dir, "frame10.png")
-        arguments_strSecond = os.path.join(MB_Other_DATA, dir, "frame11.png")
-        gt_path = os.path.join(MB_Other_GT, dir, "frame10i11.png")
+        arguments_strFirst = os.path.join(MB_Other_DATA, dir, "im1.png"")
+        arguments_strSecond = os.path.join(MB_Other_DATA, dir, "im3.png"")
+        gt_path = os.path.join(MB_Other_GT, dir, "im2.png"")
 
         X0 =  torch.from_numpy( np.transpose(imread(arguments_strFirst) , (2,0,1)).astype("float32")/ 255.0).type(dtype)
         X1 =  torch.from_numpy( np.transpose(imread(arguments_strSecond) , (2,0,1)).astype("float32")/ 255.0).type(dtype)
