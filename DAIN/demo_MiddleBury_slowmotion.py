@@ -60,7 +60,17 @@ model = model.eval() # deploy mode
 use_cuda=args.use_cuda
 save_which=args.save_which
 dtype = args.dtype
-unique_id =str(random.randint(0, 100000))
+# unique_id =str(random.randint(0, 100000))
+# print("The unique id for current testing is: " + str(unique_id))
+
+
+#give date-time folder for the result
+today = datetime.now()
+if today.hour < 12:
+    h = "00"
+else:
+    h = "12"
+unique_id =  today.strftime('%Y%m%d')+ "_"+ today.strftime('%H%M%S')
 print("The unique id for current testing is: " + str(unique_id))
 
 interp_error = AverageMeter()
