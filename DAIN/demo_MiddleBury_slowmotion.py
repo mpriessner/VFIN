@@ -10,6 +10,7 @@ from my_args import  args
 from scipy.misc import imread, imsave
 from AverageMeter import  *
 import shutil
+from datetime import datetime
 
 torch.backends.cudnn.benchmark = True # to speed up the
 
