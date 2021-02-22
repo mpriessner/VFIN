@@ -135,8 +135,9 @@ if DO_MiddleBurryOther:
             X0 = X0.cuda()
             X1 = X1.cuda()
         proc_end = time.time()
-        y_s,offset,filter = model(torch.stack((X0, X1),dim = 0))
-        y_ = y_s[save_which]
+        # y_s,offset,filter = model(torch.stack((X0, X1),dim = 0))
+        y_ = model(torch.stack((X0, X1),dim = 0))
+        # y_ = y_s[save_which]
 
         proc_timer.update(time.time() -proc_end)
         tot_timer.update(time.time() - end)
@@ -148,8 +149,8 @@ if DO_MiddleBurryOther:
                 y_ = y_.data.cpu().numpy()
             else:
                 y_ = [item.data.cpu().numpy() for item in y_]
-            offset = [offset_i.data.cpu().numpy() for offset_i in offset]
-            filter = [filter_i.data.cpu().numpy() for filter_i in filter]  if filter[0] is not None else None
+            # offset = [offset_i.data.cpu().numpy() for offset_i in offset]
+            # filter = [filter_i.data.cpu().numpy() for filter_i in filter]  if filter[0] is not None else None
             X1 = X1.data.cpu().numpy()
         else:
             X0 = X0.data.numpy()
@@ -157,8 +158,8 @@ if DO_MiddleBurryOther:
                 y_ = y_.data.numpy()
             else:
                 y_ = [item.data.numpy() for item in y_]
-            offset = [offset_i.data.numpy() for offset_i in offset]
-            filter = [filter_i.data.numpy() for filter_i in filter]
+            # offset = [offset_i.data.numpy() for offset_i in offset]
+            # filter = [filter_i.data.numpy() for filter_i in filter]
             X1 = X1.data.numpy()
 
 
@@ -166,10 +167,10 @@ if DO_MiddleBurryOther:
         X0 = np.transpose(255.0 * X0.clip(0,1.0)[0, :, intPaddingTop:intPaddingTop+intHeight, intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0))
         y_ = [np.transpose(255.0 * item.clip(0,1.0)[0, :, intPaddingTop:intPaddingTop+intHeight,
                                   intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0)) for item in y_]
-        offset = [np.transpose(offset_i[0, :, intPaddingTop:intPaddingTop+intHeight, intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0)) for offset_i in offset]
-        filter = [np.transpose(
-            filter_i[0, :, intPaddingTop:intPaddingTop + intHeight, intPaddingLeft: intPaddingLeft + intWidth],
-            (1, 2, 0)) for filter_i in filter]  if filter is not None else None
+        # offset = [np.transpose(offset_i[0, :, intPaddingTop:intPaddingTop+intHeight, intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0)) for offset_i in offset]
+        # filter = [np.transpose(
+        #     filter_i[0, :, intPaddingTop:intPaddingTop + intHeight, intPaddingLeft: intPaddingLeft + intWidth],
+        #     (1, 2, 0)) for filter_i in filter]  if filter is not None else None
         X1 = np.transpose(255.0 * X1.clip(0,1.0)[0, :, intPaddingTop:intPaddingTop+intHeight, intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0))
 
         timestep = args.time_step
