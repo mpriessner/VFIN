@@ -8,7 +8,10 @@ import os
 import shutil
 import numpy as np
 import h5py
-
+import sys
+_ = (sys.path.append("/usr/local/lib/python3.6/site-packages"))
+sys.path.insert(0,'/content/DAIN/load_functions')
+from prepare_split_images import make_folder_with_date
 
 def prep_folder_for_resconstruction(folder_option, img_list, fraction_list, z_list, t_list, file_nr, interpolate_location, sub_folder_location):
     """This function just prepares a folderstructure where all the T or Z images are each in one folder together (same as in the zoomInterpolation script)"""
@@ -171,7 +174,160 @@ def save_as_h5py(img_list, fraction_list, zt_list, file_nr, interpolate_location
     return h5py_safe_location_list
 
 
+def restructure_folder_for_processing(interpolate_location, Saving_path, log_path_file, divisor, folder_option, use_RGB):
+
+  # create a list of the identifyer for 
+  img_list         = []
+  fraction_list    = []
+  z_list          = []
+  t_list          = []
+
+  # Get all the different identifier from the foldername
+  # which provides the information of how many images and 
+  # dimensions the reconstructed image will have
+  folder_list = get_folder_list(interpolate_location)
+  folder_name_list = [i.split("/")[-1] for i in folder_list]
+
+  for folder_name in folder_name_list:
+    image_nr =        folder_name.split("_")[0][:]
+    if image_nr not in img_list:
+      img_list.append(image_nr)
+
+    fraction_nr =     folder_name.split("_")[1][:]
+    if fraction_nr not in fraction_list:
+      fraction_list.append(fraction_nr)
+    # permutation_nr =  folder_name.split("_")[2][:]
+
+    z_nr =           folder_name.split("_")[-1][:]
+    if z_nr not in z_list:
+      z_list.append(z_nr)  
+
+    t_nr =           folder_name.split("_")[-2][:]
+    if t_nr not in t_list:
+        t_list.append(t_nr)
+
+    file_nr =         os.listdir(folder_list[0])
+    file_nr.sort()
+
+
+  #create processed path
+  from prepare_dataset_train_test_folders import make_folder_with_date
+  processed_path = "/content/DAIN/MiddleBurySet/processed"
+  if not os.path.exists(processed_path):
+    os.mkdir(processed_path)
+  reprocessed_folder = make_folder_with_date(processed_path, "experiment")
+
+  #reorder the folder - put all the T or Z images together in one folder
+  prep_folder_for_resconstruction(folder_option, img_list, fraction_list, z_list, t_list, file_nr, interpolate_location, reprocessed_folder)
+  return reprocessed_folder
 
 
 
+def save_interpolated_image(interpolate_location, Saving_path, log_path_file, folder_option, divisor, use_RGB):
+
+  img_list         = []
+  fraction_list    = []
+  zt_list          = []
+
+  # Get all the different identifier from the foldername
+  # which provides the information of how many images and 
+  # dimensions the reconstructed image will have
+  folder_list = get_folder_list(interpolate_location)
+  folder_name_list = [i.split("/")[-1] for i in folder_list]
+  for folder_name in folder_name_list:
+    image_nr =        folder_name.split("_")[0][:]
+    fraction_nr =     folder_name.split("_")[1][:]
+    # permutation_nr =  folder_name.split("_")[2][:]
+    zt_nr =           folder_name.split("_")[2][:]
+    file_nr =         os.listdir(folder_list[0])
+    file_nr.sort()
+    if image_nr not in img_list:
+      img_list.append(image_nr)
+    if fraction_nr not in fraction_list:
+      fraction_list.append(fraction_nr)
+    # if permutation_nr not in permutation_list:
+    #   permutation_list.append(permutation_nr)
+    if zt_nr not in zt_list:
+      zt_list.append(zt_nr)
+
+  # find the dimensions of the reconstructed image (important for big images
+  # that are split in smaller pieces) 
+  # find out what is the output dimension of the image
+  img_multiplyer = len(fraction_list)
+  if img_multiplyer == 1:
+      multiplyer = 1
+      product_image_shape = divisor* multiplyer
+  elif img_multiplyer == 4:
+      multiplyer = 2
+      product_image_shape = divisor * multiplyer
+  elif img_multiplyer == 16:
+      multiplyer = 4
+      product_image_shape = divisor *multiplyer
+
+
+  print(f"img_list is: {img_list}")
+  print(f"fraction_list is: {fraction_list}")
+  # print(f"Permutation_list is: {permutation_list}")
+  print(f"zt_list is: {zt_list}")
+  print(f"Product_image_shape is: {product_image_shape}")
+  print(f"Files is: {file_nr}")
+  print(f"File_nr is: {len(file_nr)}")
+
+  print(f"Folder_list is: {folder_list}")
+  print(f"Image shape is: {product_image_shape}")
+
+  # Save all images in one big h5py-file per image 
+  h5py_safe_location_list = save_as_h5py(img_list, fraction_list, zt_list, file_nr, interpolate_location, multiplyer, product_image_shape, use_RGB)
+  print(f"There are {len(h5py_safe_location_list)} images to reconstruct")
+
+
+  # Create folder where reconstructed images are stored (depending on the mode)
+  if folder_option == "prep_predict_t" or folder_option == "upsample_t":
+    save_location_image = make_folder_with_date(Saving_path, "t_interpolation")
+  elif folder_option == "prep_predict_z" or folder_option == "upsample_z":
+    save_location_image = make_folder_with_date(Saving_path, "z_interpolation")
+
+
+  # Read log-file for naming the files correctly
+  df_files = pd.read_csv(log_path_file)
+
+  #----------------Save Image Stack as TIF file from h5py------------------------------#
+
+  # The reconstructed files will be saved in a new folder in the provided source_path labelled with mode, date and time.
+  file_count = 0 # necessarey in case the file is split because of a too big size - not implmelmented anymore
+  for h5py_safe_location in tqdm(h5py_safe_location_list):
+    with h5py.File(h5py_safe_location, 'r') as f:
+        file_name = df_files.at[file_count, 'file_name']
+        list_keys = list(f.keys())
+
+        if use_RGB:
+          tz_dim, xy_dim, xy_dim, channels = f[list_keys[0]].shape  
+          temp_img = np.zeros((1 ,tz_dim, xy_dim, xy_dim, channels)).astype('uint8')
+        else:
+          tz_dim, xy_dim, xy_dim = f[list_keys[0]].shape  
+          temp_img = np.zeros((1 ,tz_dim, xy_dim, xy_dim)).astype('uint8')
+
+        # image_count = 0
+        # slice_count = 0
+        for image in f.values():
+        # if asizeof.asizeof(temp_img) < available_ram*1000000000:
+          if use_RGB:
+            temp_img = np.append(temp_img,[image[:,:,:,:]],axis=0)
+          else:
+            temp_img = np.append(temp_img,[image[:,:,:]],axis=0)
+            # print(asizeof.asized(temp_img, detail=1).format())
+
+          # else:
+            # save_image(temp_img, folder_option, save_location_image, file_name, use_RGB)
+            # slice_count +=1
+            # if use_RGB:
+            #   temp_img = np.zeros((1 ,tz_dim, xy_dim, xy_dim, channels)).astype('uint8')
+            #   temp_img = np.append(temp_img,[image[:,:,:,:]],axis=0)
+            # else:
+            #   temp_img = np.zeros((1 ,tz_dim, xy_dim, xy_dim)).astype('uint8')          
+            #   temp_img = np.append(temp_img,[image[:,:,:]],axis=0)
+
+        save_image(temp_img, folder_option, save_location_image, file_name, use_RGB)
+        # file_count += 1
+  return save_location_image
 
