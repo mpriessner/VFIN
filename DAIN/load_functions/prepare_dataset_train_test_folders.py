@@ -128,7 +128,7 @@ def upsample_z(img_path_list, file_num, sub_save_location):
           # # saving images as PNG
           io.imsave("{}.png".format("im1"), img_save_1)
           io.imsave("{}.png".format("im3"), img_save_2)
-    return folder_steps
+    return split_folder
 
 
 def upsample_t(img_path_list, file_num, sub_save_location):
