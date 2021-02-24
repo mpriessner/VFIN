@@ -421,3 +421,71 @@ def prepare_z_train_data(img_path_list, file_num,  sub_save_location, split_trai
 
         print("{}/{}\n".format(file_folder,slice_folder))
     return sequence_path
+
+
+
+def data_train_test_preparation(folder_option, split_img_folder_path, save_location, split_training_test):
+
+    if folder_option == "prep_t_train":
+      name = "prep_t_train"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        train_folder = prepare_t_train_data(img_path_list, file_num, sub_save_location, split_training_test)
+        folder_steps = ""
+        folder_gt = ""
+        split_folder  = ""
+    elif folder_option == "prep_z_train":
+      name = "prep_z_train"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        train_folder = prepare_z_train_data(img_path_list, file_num, sub_save_location, split_training_test)    
+        folder_steps = ""
+        folder_gt = ""
+        split_folder  = ""
+
+    elif folder_option == "prep_predict_t":
+      name = "prep_predict_t"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        folder_steps, folder_gt = perform_prep_predict_t_creation(img_path_list, file_num, sub_save_location, folder_option)
+        # upsample_t_creation(img_path_list, file_num, sub_save_location, folder_option)
+        split_folder = ""
+        train_folder = ""
+    elif folder_option == "prep_predict_z":
+      name = "prep_predict_z"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        folder_steps, folder_gt =  perform_prep_predict_z_creation(img_path_list, file_num, sub_save_location)
+        split_folder = ""
+        train_folder = "" 
+
+    elif folder_option == "upsample_t":
+      name = "upsample_t"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        split_folder = upsample_t(img_path_list, file_num, sub_save_location)
+        folder_steps = ""
+        folder_gt = ""
+        train_folder  = ""
+    elif folder_option == "upsample_z":
+      name = "upsample_z"
+      img_path_list = []
+      img_path_list = get_img_path_list(img_path_list, split_img_folder_path) 
+      sub_save_location = make_folder_with_date(save_location, name)
+      for file_num in range(len(img_path_list)):
+        split_folder =  upsample_z(img_path_list, file_num, sub_save_location)
+        folder_steps = ""
+        folder_gt = ""
+        train_folder  = ""
+    return split_folder, folder_steps, folder_gt, train_folder
+    
