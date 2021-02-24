@@ -97,13 +97,15 @@ def upsample_z(img_path_list, file_num, sub_save_location):
     if not os.path.exists(split_folder):
       os.mkdir(split_folder)
 
-    fraction_num = img_path_list[file_num][-6:-4]
+    img_nr = img_path_list[file_num].split("/")[-1].split(".")[0].split("-")[1][:3]
+    fr_nr = img_path_list[file_num].split("/")[-1].split(".")[0].split("-")[2][:2]
+    # fraction_num = img_path_list[file_num][-6:-4]
 
     #create new directory-path
     for t_num in tqdm(range(0,t)):
         for z_num in range(z-1):
           #create new directory-path
-          file_folder = ("i-%03d" %(file_num) + f"_f-{fraction_num}" + "_t-%03d" %(t_num) +"_z-%03d"%(z_num))
+          file_folder = ("i-{}".format(img_nr) + "_f-{}".format(fr_nr)+ "_t-%03d" %(t_num) +"_z-%03d"%(z_num))
           os.chdir(split_folder)
           os.mkdir(file_folder)
           steps_path_folder = os.path.join(split_folder, file_folder)
@@ -139,14 +141,16 @@ def upsample_t(img_path_list, file_num, sub_save_location):
     if not os.path.exists(split_folder):
       os.mkdir(split_folder)
 
-    fraction_num = img_path_list[file_num][-6:-4]
+    img_nr = img_path_list[file_num].split("/")[-1].split(".")[0].split("-")[1][:3]
+    fr_nr = img_path_list[file_num].split("/")[-1].split(".")[0].split("-")[2][:2]
+    # fraction_num = img_path_list[file_num][-6:-4]
 
-    images_jump =2
+    # images_jump =2
     #create new directory-path
     for z_num in tqdm(range(0,z)):
         for t_num in range(t-1):
           #create new directory-path
-          file_folder = ("i-%03d" %(file_num) + f"_f-{fraction_num}" + "_t-%03d" %(t_num) +"_z-%03d"%(z_num))
+          file_folder = ("i-{}".format(img_nr) + "_f-{}".format(fr_nr) + "_z-%03d"%(z_num) + "_t-%03d" %(t_num))
           os.chdir(split_folder)
           os.mkdir(file_folder)
           steps_path_folder = os.path.join(split_folder, file_folder)
