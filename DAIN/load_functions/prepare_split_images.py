@@ -173,4 +173,4 @@ def split_img_small(img_list, Source_path, divisor, split_img_folder_path, log_p
             with open(log_path_file, "a", newline='') as name_log:
                 writer = csv.writer(name_log)
                 writer.writerow([f"{img_list[image_num][:-4]}",f"{name}.tif"])
-
+    return use_RGB
