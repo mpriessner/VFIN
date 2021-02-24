@@ -103,7 +103,7 @@ def upsample_z(img_path_list, file_num, sub_save_location):
 
     #create new directory-path
     for t_num in tqdm(range(0,t)):
-        for z_num in range(z-1):
+        for z_num in range(0,z-1):
           #create new directory-path
           file_folder = ("i-{}".format(img_nr) + "_f-{}".format(fr_nr)+ "_t-%03d" %(t_num) +"_z-%03d"%(z_num))
           os.chdir(split_folder)
@@ -148,7 +148,7 @@ def upsample_t(img_path_list, file_num, sub_save_location):
     # images_jump =2
     #create new directory-path
     for z_num in tqdm(range(0,z)):
-        for t_num in range(t-1):
+        for t_num in range(0,t-1):
           #create new directory-path
           file_folder = ("i-{}".format(img_nr) + "_f-{}".format(fr_nr) + "_z-%03d"%(z_num) + "_t-%03d" %(t_num))
           os.chdir(split_folder)
