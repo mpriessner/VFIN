@@ -126,25 +126,6 @@ def correct_channels(img):
   return img, use_RGB
     
 
-def change_train_file(zoomfactor, model_path):
-  """This function changes the resolution value in the file: Vimeo7_dataset.py"""
-  file_path_2 = "/content/ZoomInterpolation/codes/test_new.py"
-  fh_2, abs_path_2 = mkstemp()
-  with fdopen(fh_2,'w') as new_file:
-    with open(file_path_2) as old_file:
-      for counter, line in enumerate(old_file):
-        if counter ==27:
-          new_file.write(f"    scale = {zoomfactor}\n")
-        elif counter == 34:
-          new_file.write(f"    model_path = '{model_path}'\n")
-        else:
-          new_file.write(line)
-  copymode(file_path_2, abs_path_2)
-  #Remove original file
-  remove(file_path_2)
-  #Move new file
-  move(abs_path_2, file_path_2) 
-
 
 def split_img_small(img_list, Source_path, divisor, split_img_folder_path, log_path_file):
 
