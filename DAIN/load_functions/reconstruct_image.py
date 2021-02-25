@@ -22,7 +22,7 @@ def prep_folder_for_resconstruction(folder_option, img_list, fraction_list, z_li
             counter = 0
             for t in t_list:
               for single_file_nr, single_file in enumerate(file_nr):
-                  key_origin = f"{image}_{fraction}_{t}_{z}/{single_file}"
+                  key_origin = f"{image}_{fraction}_{z}_{t}/{single_file}"
                   counter_files_name = "%04d.png"%counter
                   key_destination = f"{image}_{fraction}_{z}/{counter_files_name}"
                   img_path = os.path.join(interpolate_location, key_origin)
@@ -197,16 +197,24 @@ def restructure_folder_for_processing(interpolate_location, Saving_path, log_pat
     if fraction_nr not in fraction_list:
       fraction_list.append(fraction_nr)
     # permutation_nr =  folder_name.split("_")[2][:]
+    # necessary because otherwise the reconstruction in T dimension goes wrong
+    if folder_option == "upsample_z" or folder_option == "prep_z_train":
+        z_nr =           folder_name.split("_")[-1][:]
+        if z_nr not in z_list:
+          z_list.append(z_nr)  
 
-    z_nr =           folder_name.split("_")[-1][:]
-    if z_nr not in z_list:
-      z_list.append(z_nr)  
+        t_nr =           folder_name.split("_")[-2][:]
+        if t_nr not in t_list:
+            t_list.append(t_nr)
+    elif folder_option == "upsample_t" or folder_option == "prep_t_train":
+        z_nr =           folder_name.split("_")[-2][:]
+        if z_nr not in z_list:
+          z_list.append(z_nr)  
 
-    t_nr =           folder_name.split("_")[-2][:]
-    if t_nr not in t_list:
-        t_list.append(t_nr)
-
-    file_nr =         os.listdir(folder_list[0])
+        t_nr =           folder_name.split("_")[-1][:]
+        if t_nr not in t_list:
+            t_list.append(t_nr)
+        file_nr =         os.listdir(folder_list[0])
     file_nr.sort()
 
 
