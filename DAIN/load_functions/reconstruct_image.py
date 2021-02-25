@@ -214,8 +214,8 @@ def restructure_folder_for_processing(interpolate_location, Saving_path, log_pat
         t_nr =           folder_name.split("_")[-1][:]
         if t_nr not in t_list:
             t_list.append(t_nr)
-        file_nr =         os.listdir(folder_list[0])
-    file_nr.sort()
+  file_nr = os.listdir(folder_list[0])
+  file_nr.sort()
 
 
   #create processed path
