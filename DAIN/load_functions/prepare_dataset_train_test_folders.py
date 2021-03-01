@@ -491,5 +491,5 @@ def data_train_test_preparation(folder_option, split_img_folder_path, save_locat
         folder_steps = ""
         folder_gt = ""
         train_folder  = ""
-    return split_folder, folder_steps, folder_gt, train_folder
+    return split_folder, folder_steps, folder_gt, train_folder, sub_save_location
     
