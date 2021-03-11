@@ -11,6 +11,7 @@ from scipy.misc import imread, imsave
 from AverageMeter import  *
 import shutil
 from datetime import datetime
+import cv2
 
 torch.backends.cudnn.benchmark = True # to speed up the
 
@@ -191,6 +192,11 @@ if DO_MiddleBurryOther:
         for item, time_offset in zip(y_, time_offsets):
             arguments_strOut = os.path.join(gen_dir, dir, "{:0>4d}.png".format(count))
             count = count + 1
+            # correct jumping image
+            y, x, c= item.shape
+            img_new = item[1:y-1, 1:x-1, :]
+            item = cv2.resize(img_new, (y,x), interpolation = cv2.INTER_AREA)
+
             imsave(arguments_strOut, np.round(item).astype(numpy.uint8))
         shutil.copy(arguments_strSecond, os.path.join(gen_dir, dir, "{:0>4d}.png".format(count)))
         count = count + 1
