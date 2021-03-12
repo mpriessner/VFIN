@@ -192,10 +192,12 @@ if DO_MiddleBurryOther:
         for item, time_offset in zip(y_, time_offsets):
             arguments_strOut = os.path.join(gen_dir, dir, "{:0>4d}.png".format(count))
             count = count + 1
-            # correct jumping image
-            y, x, c= item.shape
-            img_new = item[1:y-1, 1:x-1, :]
-            item = cv2.resize(img_new, (y,x), interpolation = cv2.INTER_AREA)
+           ## in case if the image jumps - uncomment section  below
+           # correct jumping image
+           # y, x, c= item.shape
+           # img_new = item[1:y-1, 1:x-1, :]
+           # item = cv2.resize(img_new, (y,x), interpolation = cv2.INTER_AREA)
+           # item = cv2.addWeighted( item, 1.3, item, 0,1)
 
             imsave(arguments_strOut, np.round(item).astype(numpy.uint8))
         shutil.copy(arguments_strSecond, os.path.join(gen_dir, dir, "{:0>4d}.png".format(count)))
