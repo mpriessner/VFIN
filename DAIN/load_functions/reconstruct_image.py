@@ -335,7 +335,7 @@ def save_interpolated_image(interpolate_location, Saving_path, log_path_file, fo
             #   temp_img = np.append(temp_img,[image[:,:,:]],axis=0)
 
         save_image(temp_img, folder_option, save_location_image, file_name, use_RGB)
-        # file_count += 1
+        file_count += 1
   return save_location_image
 
 
