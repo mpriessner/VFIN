@@ -89,7 +89,7 @@ def save_image(temp_img, folder_option, save_location_image, file_name, use_RGB)
 
   elif folder_option == "upsample_t" or folder_option == "prep_predict_t" :
     temp_img_final = np.swapaxes(temp_img_final, 0, 1)
-    io.imsave(save_location_image+f"/{file_name}_T.tif", temp_img_final)
+    io.imsave(save_location_image+f"/DAIN_{file_name[:-4]}_T.tif", temp_img_final)
 
 
 
