@@ -65,7 +65,7 @@ def prep_folder_for_resconstruction(folder_option, img_list, fraction_list, z_li
                     shutil.move(img_path_origin, img_path_destination)
                     counter += 1
 
-                  if t ==t_list[-1] and single_file == file_nr[-1]:
+                  if z ==z_list[-1] and single_file == file_nr[-1]:
                     img_path_origin = os.path.join(interpolate_location, key_origin)
                     img_path_destination = os.path.join(sub_folder_location, key_destination)   
                     new_folder = "/".join(img_path_destination.split("/")[:-1])
