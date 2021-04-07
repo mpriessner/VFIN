@@ -15,7 +15,7 @@ import math
 from skimage import io
 
 def get_img_path_list(img_path_list, img_folder_path):
-  ''' Creates a list of image-path that will be used for loading the images later'''
+  ''' Creates a list of full image-paths of a provided folder. It also takes an empty list to store the found paths and returns that list'''
   flist = os.listdir(img_folder_path)
   flist.sort()
   for i in flist:
@@ -26,6 +26,7 @@ def get_img_path_list(img_path_list, img_folder_path):
 # img_path_list
 
 def load_img(img_path):
+    """This Function loads the image, corrects the channels (in case if it is not a 4D image file) and returns the dimensions of the file with a boolean of whether it is a RGB file"""
     img = io.imread(img_path)
     img, use_RGB = correct_channels(img)
     if img.shape[-1]==3:
@@ -58,6 +59,7 @@ def correct_channels(img):
 
 
 def make_folder_with_date(save_location, name):
+  """This function creates a folder starting with the date and time given the folder location and folder name"""
   today = datetime.now()
   if today.hour < 12:
     h = "00"
@@ -69,7 +71,7 @@ def make_folder_with_date(save_location, name):
 
 
 def create_3D_image(img, x_dim, y_dim):
-# creates 3D image with 3 times the same values for RGB because the NN was generated for normal rgb images dim(3,x,y)
+  """creates 3D image with 3 times the same values for RGB because the NN was generated for normal rgb images dim(3,x,y)"""
   # print(img.shape)
   image_3D = np.zeros((x_dim,y_dim,3))
   image_3D[:,:,0] = img
@@ -78,7 +80,7 @@ def create_3D_image(img, x_dim, y_dim):
   return image_3D
 
 def convert(img, target_type_min, target_type_max, target_type):
-  # this function converts images from float32 to unit8 
+    """this function converts images from float32 to unit8 """
     imin = img.min()
     imax = img.max()
     a = (target_type_max - target_type_min) / (imax - imin)
@@ -87,8 +89,8 @@ def convert(img, target_type_min, target_type_max, target_type):
     return new_img
 
 
-''' the following funcitons prepare the dataset in a way that it form the necessary folder system for the NN to handle the data correctly
-'''
+''' the following funcitons prepare the dataset in a way that it form the necessary folder system for the NN to handle the data correctly'''
+
 def upsample_z(img_path_list, file_num, sub_save_location):
     os.chdir(sub_save_location)
     t, z, y_dim,x_dim, img, use_RGB = load_img(img_path_list[file_num])
@@ -429,7 +431,7 @@ def prepare_z_train_data(img_path_list, file_num,  sub_save_location, split_trai
 
 
 def data_train_test_preparation(folder_option, split_img_folder_path, save_location, split_training_test):
-
+    """This function executs the folder creation option to prepare the test or train folder necessary for the network"""
     if folder_option == "prep_t_train":
       name = "prep_t_train"
       img_path_list = []
