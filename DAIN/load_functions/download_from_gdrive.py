@@ -2,6 +2,7 @@
 import requests
 
 def download_file_from_google_drive(id, destination):
+    """This function allows to download files from google drive by providing the publicly shared link"""
     URL = "https://docs.google.com/uc?export=download"
 
     session = requests.Session()
