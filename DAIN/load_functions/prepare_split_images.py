@@ -42,6 +42,7 @@ class bcolors:
 
 
 def make_folder_with_date(save_location, name):
+  """This function creates a folder starting with the date and time given the folder location and folder name"""
   today = datetime.now()
   if today.hour < 12:
     h = "00"
@@ -88,7 +89,7 @@ def flip(source_img, name, path):
 
 
 def diplay_img_info(img, divisor, use_RGB):
-  ### display image data
+    """ This function displays the information of the image dimensions as a print"""
     nr_z_slices = img.shape[1]
     nr_timepoints = img.shape[0]
     x_dim = img.shape[-2]
@@ -128,7 +129,7 @@ def correct_channels(img):
 
 
 def split_img_small(img_list, Source_path, divisor, split_img_folder_path, log_path_file):
-
+    """This function splits the bigger image in to smaller batches and saves them with a structured name "img-xxx_fraction-xx" """
     for image_num in tqdm(range(len(img_list))):
         img_path = os.path.join(Source_path,img_list[image_num])
         t, z, y_dim,x_dim, img, use_RGB =load_img(img_path)
