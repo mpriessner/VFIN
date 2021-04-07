@@ -1,5 +1,6 @@
 
 def manipulate_listdatasets(dim):
+  """This function manipulates the listdataset.py file to adapt the dimension of the input file"""
   fp = open("/content/DAIN/datasets/listdatasets.py")
   for i, line in enumerate(fp):
     if i==28:
