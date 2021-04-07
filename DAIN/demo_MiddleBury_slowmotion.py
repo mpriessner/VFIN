@@ -11,7 +11,7 @@ from scipy.misc import imread, imsave
 from AverageMeter import  *
 import shutil
 from datetime import datetime
-import cv2
+#import cv2
 
 torch.backends.cudnn.benchmark = True # to speed up the
 
