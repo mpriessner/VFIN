@@ -1,9 +1,10 @@
 #!/bin/bash -x
 
-NUMEPOCH=1
-BATCHSIZE=1
-DATASETPATH='/content/gdrive/My Drive/1.2_BIG_DATA_PhD_Project_2/3.DAIN/_SIMULATED_DATA_TEST/Master_test/t_split/Set_1'
-PRETRAINED='49773-Sat-May-09-21:14'
+NUMEPOCH=2
+BATCHSIZE=3
+DATASETPATH='/content/DAIN/demo/spit_source_DAIN/128_img_separation/20210625_133002_prep_t_train'
+PRETRAINED='42265-Fri-Jun-25-13-31'
+LR=0.0005
 
 #cd /content/DAIN
 CUDA_VISIBLE_DEVICES=0 
@@ -13,7 +14,7 @@ python train.py \
        --numEpoch ${NUMEPOCH} \
        --batch_size ${BATCHSIZE} \
        --save_which 1 \
-       --lr 0.0005 \
+       --lr ${LR} \
        --rectify_lr 0.0005 \
        --flow_lr_coe 0.01 \
        --occ_lr_coe 0.0 \
