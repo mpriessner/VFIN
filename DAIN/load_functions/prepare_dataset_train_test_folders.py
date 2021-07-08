@@ -48,12 +48,12 @@ def correct_channels(img):
     use_RGB = False
   if len(img.shape) ==4 and use_RGB:
     t, x, y, c = img.shape
-    zeros = np.zeros((t,1,y,x,c), dtype=np.int8 )
+    zeros = np.zeros((t,1,y,x,c), dtype=np.uint8 )
     zeros[:,0,:,:,:] = img
     img = zeros
   elif len(img.shape) ==3 and not use_RGB:
     t, x, y = img.shape
-    zeros = np.zeros((t,1,y,x), dtype=np.int8 )
+    zeros = np.zeros((t,1,y,x), dtype=np.uint8 )
     zeros[:,0,:,:] = img
     img = zeros
   return img, use_RGB
