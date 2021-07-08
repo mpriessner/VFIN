@@ -291,33 +291,7 @@ def prepare_z_train_data(img_path_list, file_num,  sub_save_location, split_trai
     return sequence_path
 
 
-# def create_3D_image(img, x_dim, y_dim):
-#   """creates 3D image with 3 times the same values for RGB because the NN was generated for normal rgb images dim(3,x,y)"""
-#   # print(img.shape)
-#   image_3D = np.zeros((x_dim,y_dim,3), dtype=np.uint8)
-#   image_3D[:,:,0] = img
-#   image_3D[:,:,1] = img
-#   image_3D[:,:,2] = img
-#   return image_3D
 
-
-# def convert(img, target_type_min, target_type_max, target_type):
-#     """this function converts images from float32 to unit8 """
-#     imin = img.min()
-#     imax = img.max()
-#     a = (target_type_max - target_type_min) / (imax - imin)
-#     b = target_type_max - a * imax
-#     new_img = (a * img + b).astype(target_type)
-#     return new_img
-
-
-from skimage.color import gray2rgb
-from skimage import io
-img = io.imread(r"E:\TRAINING_DATA\Cell_data_training_data\8 Bit BF\spit_source_DAIN\512_img_separation\2021070816_164041_prep_t_train\sequences\01\0001\im1.png")
-img1 = img[:,:,1]
-img1.shape
-RBG = gray2rgb(img1)
-RBG.dtype
 ##############################################
 ##############################################
 ##############################################
