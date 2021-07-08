@@ -39,6 +39,7 @@ def load_img(img_path):
     print("The image dimensions are: " + str(img.shape))
     return t, z, y_dim,x_dim, img, use_RGB
   
+
 def correct_channels(img):
   '''For 2D + T (with or without RGB) a artificial z channel gets created'''
   if img.shape[-1] ==3:
@@ -47,12 +48,12 @@ def correct_channels(img):
     use_RGB = False
   if len(img.shape) ==4 and use_RGB:
     t, x, y, c = img.shape
-    zeros = np.zeros((t,1,y,x,c))
+    zeros = np.zeros((t,1,y,x,c), dtype=np.int8 )
     zeros[:,0,:,:,:] = img
     img = zeros
   elif len(img.shape) ==3 and not use_RGB:
     t, x, y = img.shape
-    zeros = np.zeros((t,1,y,x))
+    zeros = np.zeros((t,1,y,x), dtype=np.int8 )
     zeros[:,0,:,:] = img
     img = zeros
   return img, use_RGB
